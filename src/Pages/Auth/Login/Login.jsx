@@ -1,0 +1,112 @@
+import React from "react";
+import { useForm } from "react-hook-form";
+import { NavLink } from "react-router";
+
+const Login = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const handleLogin = (data) => {
+    console.log("after having: ", data);
+  };
+  return (
+    <div className="hero min-h-screen bg-base-200 px-4 min-w-full">
+      <div className="hero-content flex-col w-full">
+        {/* Heading */}
+        <div className="text-center w-full">
+          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Login Now!</h1>
+        </div>
+
+        {/* Card */}
+        <div className="card bg-base-100 w-full shadow-2xl">
+          <div className="card-body">
+            <form onSubmit={handleSubmit(handleLogin)}>
+              <fieldset className="fieldset space-y-2">
+                {/* Email */}
+                <label className="label font-medium text-lg">Email</label>
+                <input
+                  type="email"
+                  className="input input-bordered w-full"
+                  {...register("email", { required: true })}
+                  placeholder="Enter your email"
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm">Email is required</p>
+                )}
+
+                {/* Password */}
+                <label className="label font-medium text-lg mt-2">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  {...register("password", { required: true, minLength: 6 })}
+                  className="input input-bordered w-full"
+                  placeholder="Enter your password"
+                />
+                {errors.password?.type === "required" && (
+                  <p className="text-red-500 text-sm">Password is required</p>
+                )}
+                {errors.password?.type === "minLength" && (
+                  <p className="text-red-500 text-sm">
+                    Password must be at least 6 characters
+                  </p>
+                )}
+
+                {/* Forgot Password */}
+                <div className="text-right mt-1">
+                  <a className="link link-hover text-lg underline">
+                    Forgot password?
+                  </a>
+                </div>
+
+                {/* Button */}
+                <button className="btn btn-neutral w-full mt-4">Login</button>
+              </fieldset>
+            </form>
+            <p className="text-lg ">
+              Don't have an account?{" "}
+              <NavLink to="/register" className="underline text-blue-500">
+                Sign Up
+              </NavLink>
+            </p>
+            <button className="btn bg-white w-full text-black text-md md:text-lg border-[#e5e5e5] mt-4 hover:bg-gray-100 my-4  ">
+              <svg
+                aria-label="Google logo"
+                width="30"
+                height="30"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+              >
+                <g>
+                  <path d="m0 0H512V512H0" fill="#fff"></path>
+                  <path
+                    fill="#34a853"
+                    d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
+                  ></path>
+                  <path
+                    fill="#4285f4"
+                    d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
+                  ></path>
+                  <path
+                    fill="#fbbc02"
+                    d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"
+                  ></path>
+                  <path
+                    fill="#ea4335"
+                    d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
+                  ></path>
+                </g>
+              </svg>
+              Sign Up with Google
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;

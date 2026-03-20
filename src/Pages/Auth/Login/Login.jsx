@@ -1,8 +1,11 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { NavLink } from "react-router";
+import useAuth from "../../../hooks/useAuth";
 
 const Login = () => {
+  const { loginUser, signInWithGoogle } = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -10,6 +13,8 @@ const Login = () => {
   } = useForm();
   const handleLogin = (data) => {
     console.log("after having: ", data);
+    const { email, password } = data;
+    loginUser(email, password).then((result) => console.log(result));
   };
   return (
     <div className="hero min-h-screen bg-base-200 px-4 min-w-full">

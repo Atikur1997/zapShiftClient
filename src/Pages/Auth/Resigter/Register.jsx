@@ -1,8 +1,10 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { NavLink } from "react-router";
+import useAuth from "../../../hooks/useAuth";
 
 const Register = () => {
+  const { registerUser, signInWithGoogle } = useAuth();
   const {
     register,
     handleSubmit,
@@ -15,6 +17,8 @@ const Register = () => {
 
   const handleRegistration = (data) => {
     console.log("after having: ", data);
+    const { email, password } = data;
+    registerUser(email, password).then((result) => console.log(result));
   };
 
   return (

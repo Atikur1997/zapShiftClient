@@ -1,16 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { NavLink } from "react-router";
 import useAuth from "../../../hooks/useAuth";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const { loginUser, signInWithGoogle } = useAuth();
-
+  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const handlegoogleSignIn = () => {
+    signInWithGoogle()
+      .then((result) => {
+        console.log(result.user);
+      })
+      .catch((error) => console.log(error.message));
+  };
   const handleLogin = (data) => {
     console.log("after having: ", data);
     const { email, password } = data;
@@ -45,20 +54,36 @@ const Login = () => {
                 <label className="label font-medium text-lg mt-2">
                   Password
                 </label>
-                <input
-                  type="password"
-                  {...register("password", { required: true, minLength: 6 })}
-                  className="input input-bordered w-full"
-                  placeholder="Enter your password"
-                />
-                {errors.password?.type === "required" && (
-                  <p className="text-red-500 text-sm">Password is required</p>
-                )}
-                {errors.password?.type === "minLength" && (
-                  <p className="text-red-500 text-sm">
-                    Password must be at least 6 characters
-                  </p>
-                )}
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    {...register("password", { required: true, minLength: 6 })}
+                    className="input input-bordered w-full"
+                    placeholder="Enter your password"
+                  />
+                  {errors.password?.type === "required" && (
+                    <p className="text-red-500 text-sm">Password is required</p>
+                  )}
+                  {errors.password?.type === "minLength" && (
+                    <p className="text-red-500 text-sm">
+                      Password must be at least 6 characters
+                    </p>
+                  )}
+                  <div className="text-2xl absolute right-[10px] top-[10px]">
+                    {
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <FaEyeSlash></FaEyeSlash>
+                        ) : (
+                          <FaEye></FaEye>
+                        )}
+                      </button>
+                    }
+                  </div>
+                </div>
 
                 {/* Forgot Password */}
                 <div className="text-right mt-1">
@@ -77,7 +102,10 @@ const Login = () => {
                 Sign Up
               </NavLink>
             </p>
-            <button className="btn bg-white w-full text-black text-md md:text-lg border-[#e5e5e5] mt-4 hover:bg-gray-100 my-4  ">
+            <button
+              className="btn bg-white w-full text-black text-md md:text-lg border-[#e5e5e5] mt-4 hover:bg-gray-100 my-4  "
+              onClick={handlegoogleSignIn}
+            >
               <svg
                 aria-label="Google logo"
                 width="30"

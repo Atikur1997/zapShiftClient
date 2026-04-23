@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { NavLink } from "react-router";
 import useAuth from "../../../hooks/useAuth";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import axios from "axios";
 
 const Register = () => {
   const { registerUser, signInWithGoogle } = useAuth();
@@ -24,10 +25,21 @@ const Register = () => {
   const handleRegistration = (data) => {
     console.log("Form Data:", data);
     const { email, password } = data;
+    const image = data.image[0];
 
+    //register to the firebase here
     registerUser(email, password)
       .then((result) => {
         console.log("User Registered:", result.user);
+        // Now handle the image upload to imgbb
+        const fromData = new FormData();
+        fromData.append("image", image);
+        const imageApiURL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_Hosting_Key}`;
+        axios.post(imageApiURL, fromData).then((res) => {
+          console.log("after Image Upload: ", res.data.data.url);
+          //update the user profile with the image url here if needed
+          const imageURL = res.data.data.url;
+        });
       })
       .catch((error) => {
         console.log(error.message);
@@ -38,6 +50,8 @@ const Register = () => {
   const handleGoogleSignIn = () => {
     signInWithGoogle()
       .then((result) => {
+        //sote the image and get the photo url first
+
         console.log(result.user);
       })
       .catch((error) => console.log(error.message));
@@ -52,6 +66,35 @@ const Register = () => {
         {/* Form */}
         <form onSubmit={handleSubmit(handleRegistration)}>
           <fieldset className="space-y-4">
+            {/* photo image upload Field */}
+            <div>
+              <legend className="fieldset-legend">Pick a file</legend>
+              <input
+                type="file"
+                className="file-input"
+                name="image"
+                {...register("image", { required: true })}
+              />
+              <label className="label">Max size 5MB</label>
+              {errors.image?.type === "required" && (
+                <p className="text-red-500 text-sm">Image is required</p>
+              )}
+            </div>
+
+            {/* Name Field */}
+            <div>
+              <label className="label">Name</label>
+              <input
+                type="text"
+                className="input input-bordered w-full"
+                placeholder="Enter your Full name"
+                {...register("name", { required: true })}
+              />
+              {errors.name && (
+                <p className="text-red-500 text-sm">Name is required</p>
+              )}
+            </div>
+
             {/* Email */}
             <div>
               <label className="label">Email</label>
